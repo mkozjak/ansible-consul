@@ -1,0 +1,42 @@
+---
+
+- name: Bring up docker containers
+  hosts: localhost
+  roles:
+    - role: clayman74.docker-provision
+      docker_provision_privileged: true,
+      docker_provision_inventory_group: "{{ groups['machines'] }}"
+
+
+- name: Run tests
+  hosts: machines
+
+  roles:
+    - role: ansible-consul
+      consul_network: "consul_test_backend"
+      consul_container_name: "consul_test"
+
+  vars:
+    consul_network: "consul_test_backend"
+    consul_container_name: "consul_test"
+
+  tasks:
+    - name: Consul network should be existed
+      shell: docker network list --filter="name={{ consul_network }}"
+      register: networks
+
+    - fail: msg="{{ consul_network }} does not exists"
+      when: networks.stdout.find('{{ consul_network }}') == -1
+
+    - name: Check consul container should be existed
+      shell: docker ps --filter="name={{ consul_container_name }}"
+      register: containers
+
+    - fail: msg="{{ consul_container_name }} does not exists"
+      when: containers.stdout.find('{{ consul_container_name }}') == -1
+
+    - local_action: uri url=http://localhost:8500/v1/agent/services return_content=yes
+      register: webpage
+
+    - fail: msg='consul is not happy'
+      when: "'consul' not in webpage.content"

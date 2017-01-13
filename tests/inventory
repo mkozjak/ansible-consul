@@ -1,0 +1,4 @@
+localhost ansible_connection=local
+
+[machines]
+consul_master image="consul"
