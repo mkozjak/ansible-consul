@@ -19,10 +19,8 @@ before_install:
   - sudo apt-get install -y sshpass
 
 install:
-  - export PYTHONPATH=/home/travis/virtualenv/python2.7.10/lib/python2.7/site-packages/:$PYTHONPATH
-
   # Install ansible
-  - pip install ansible 'docker-py==1.9.0'
+  - pip install ansible docker-py==1.9.0
 
   # Check ansible version
   - ansible --version
@@ -31,6 +29,7 @@ install:
   - ansible-galaxy install clayman74.docker-provision --roles-path=tests/roles
 
 script:
+  - export PYTHONPATH=/home/travis/virtualenv/python2.7.12/lib/python2.7/site-packages/:$PYTHONPATH
   # Basic role syntax check
   - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
   - ansible-playbook tests/test.yml -i tests/inventory
