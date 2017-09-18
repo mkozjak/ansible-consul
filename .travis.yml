@@ -25,7 +25,7 @@ install:
   # Check ansible version
   - ansible --version
 
-  # Create ansible.cfg with correct roles_path
+  # Install dependencies roles
   - ansible-galaxy install clayman74.docker-provision --roles-path=tests/roles
 
 script:

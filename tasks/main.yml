@@ -1,5 +1,6 @@
 ---
 
 - include: docker.yml
+  when: consul_install_in_docker
   tags:
     - consul

@@ -1,5 +1,14 @@
 ---
 
-consul_network: 'backend'
-consul_image: 'consul'
-consul_container_name: 'consul'
+consul_install_in_docker: no
+
+consul_network: backend
+consul_image: consul
+consul_container_name: consul
+consul_log_driver: json-file
+consul_log_options:
+  labels: consul
+consul_client_interface: eth0
+consul_published_ports:
+  - 8500:8500
+consul_restart_policy: on-failure
