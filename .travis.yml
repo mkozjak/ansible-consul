@@ -25,11 +25,11 @@ install:
   # Check ansible version
   - ansible --version
 
-  # Create ansible.cfg with correct roles_path
+  # Install dependencies roles
   - ansible-galaxy install clayman74.docker-provision --roles-path=tests/roles
 
 script:
-  - export PYTHONPATH=/home/travis/virtualenv/python2.7.12/lib/python2.7/site-packages/:$PYTHONPATH
+  - export PYTHONPATH=$VIRTUAL_ENV/lib/python2.7/site-packages/:$PYTHONPATH
   # Basic role syntax check
   - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
   - ansible-playbook tests/test.yml -i tests/inventory

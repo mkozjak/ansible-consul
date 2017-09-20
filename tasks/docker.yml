@@ -8,15 +8,16 @@
   docker_image:
     name: "{{ consul_image }}"
 
-- name: Create container
+- name: Start container
   docker_container:
     name: "{{ consul_container_name }}"
     image: "{{ consul_image }}"
-    state: started
     env:
-      CONSUL_CLIENT_INTERFACE: eth0
+      CONSUL_CLIENT_INTERFACE: "{{ consul_client_interface }}"
+    log_driver: "{{ consul_log_driver }}"
+    log_options: "{{ consul_log_options }}"
     networks:
       - name: "{{ consul_network }}"
-    published_ports:
-      - 8500:8500
-    restart_policy: always
+    published_ports: "{{ consul_published_ports }}"
+    restart_policy: "{{ consul_restart_policy }}"
+    state: started

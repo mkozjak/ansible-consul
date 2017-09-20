@@ -15,6 +15,7 @@
     - role: ansible-consul
       consul_network: "consul_test_backend"
       consul_container_name: "consul_test"
+      consul_install_in_docker: yes
 
   vars:
     consul_network: "consul_test_backend"
@@ -26,17 +27,17 @@
       register: networks
 
     - fail: msg="{{ consul_network }} does not exists"
-      when: networks.stdout.find('{{ consul_network }}') == -1
+      when: networks.stdout.find(consul_network) == -1
 
     - name: Check consul container should be existed
       shell: docker ps --filter="name={{ consul_container_name }}"
       register: containers
 
     - fail: msg="{{ consul_container_name }} does not exists"
-      when: containers.stdout.find('{{ consul_container_name }}') == -1
+      when: containers.stdout.find(consul_container_name) == -1
 
     - local_action: uri url=http://localhost:8500/v1/agent/services return_content=yes
       register: webpage
 
     - fail: msg='consul is not happy'
-      when: "'consul' not in webpage.content"
+      when: "webpage.status != 200"
